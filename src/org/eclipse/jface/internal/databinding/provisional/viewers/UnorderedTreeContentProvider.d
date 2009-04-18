@@ -10,6 +10,8 @@
  *     Stefan Xenos, IBM - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.viewers.UnorderedTreeContentProvider;
+import org.eclipse.jface.internal.databinding.provisional.viewers.IParentProvider;
+import org.eclipse.jface.internal.databinding.provisional.viewers.TreeNode;
 
 import java.lang.all;
 
@@ -45,10 +47,10 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathContentProvider {
 
-    private HashMap mapElementToTreeNode = new HashMap();
-    private LinkedList enqueuedPrefetches = new LinkedList();
+    private HashMap mapElementToTreeNode;
+    private LinkedList enqueuedPrefetches;
     private IParentProvider rootParentProvider = null;
-    private bool useTreePaths = false;
+    private bool useTreePaths_ = false;
     
     class KnownElementsSet : AbstractObservableSet {
         
@@ -87,9 +89,10 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
         }
     }
     
-    KnownElementsSet elements = new KnownElementsSet();
+    KnownElementsSet elements;
     
-    private ITreeViewerListener expandListener = new class() ITreeViewerListener {
+    private ITreeViewerListener expandListener;
+    class ExpandListener : ITreeViewerListener {
         public void treeCollapsed(TreeExpansionEvent event) {
         }
 
@@ -119,6 +122,10 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
      */
     public this(IUnorderedTreeProvider provider, 
             Object pendingNode, bool useRefresh) {
+mapElementToTreeNode = new HashMap();
+enqueuedPrefetches = new LinkedList();
+elements = new KnownElementsSet();
+expandListener = new ExpandListener();
         this.provider = provider;
         this.pendingNode = pendingNode;
         this.useRefresh = useRefresh;
@@ -152,7 +159,7 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
      * @param usePaths
      */
     public void useTreePaths(bool usePaths) {
-        this.useTreePaths = usePaths;
+        this.useTreePaths_ = usePaths;
     }
     
     /**
@@ -181,7 +188,7 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
             if (lastElement || useRefresh) {
                 doRefresh(element);
             } else {
-                if (useTreePaths) {
+                if (useTreePaths_) {
                     List toRemove = new ArrayList();
                     TreePath[] parents = getParents(element);
                     for (int i = 0; i < parents.length; i++) {
@@ -221,7 +228,7 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
             if (useRefresh) {
                 doRefresh(element);
             } else {
-                if (useTreePaths) {
+                if (useTreePaths_) {
                     TreePath[] parents = getParents(element);
                     for (int i = 0; i < parents.length; i++) {
                         TreePath parent = parents[i];
@@ -298,7 +305,7 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
         // This should only ever be called for a single viewer
         setViewer(viewer);
         
-        if (oldInput !is null && newInput !is null && oldInput.equals(newInput)) {
+        if (oldInput !is null && newInput !is null && oldInput.opEquals(newInput)) {
             return;
         }
         
@@ -516,7 +523,7 @@ public class UnorderedTreeContentProvider : ITreeContentProvider, ITreePathConte
                     List parentPath = cast(List) iterator2.next();
                     
                     parentPath.add(parent);
-                    result.add(parentPath);
+                    result.add(cast(Object)parentPath);
                 }
             }
         }

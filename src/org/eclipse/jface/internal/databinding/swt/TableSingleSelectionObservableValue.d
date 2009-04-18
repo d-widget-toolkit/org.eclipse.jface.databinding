@@ -11,6 +11,7 @@
  *     Ashley Cambrell - bug 198904
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.TableSingleSelectionObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SingleSelectionObservableValue;
 
 import java.lang.all;
 

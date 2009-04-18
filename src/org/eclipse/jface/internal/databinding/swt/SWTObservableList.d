@@ -53,7 +53,7 @@ public abstract class SWTObservableList : AbstractObservableList {
             index = size;
         String[] newItems = new String[size + 1];
         System.arraycopy(getItems(), 0, newItems, 0, index);
-        newItems[index] = cast(String) element;
+        newItems[index] = stringcast( element);
         System.arraycopy(getItems(), index, newItems, index + 1, size - index);
         setItems(newItems);
         fireListChange(Diffs.createListDiff(Diffs.createListDiffEntry(index,
@@ -66,11 +66,11 @@ public abstract class SWTObservableList : AbstractObservableList {
 
     public Object get(int index) {
         getterCalled();
-        return getItem(index);
+        return stringcast(getItem(index));
     }
 
     public Object getElementType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 
     /**
@@ -111,17 +111,17 @@ public abstract class SWTObservableList : AbstractObservableList {
         }
         setItems(newItems);
         fireListChange(Diffs.createListDiff(Diffs.createListDiffEntry(index,
-                false, oldElement)));
-        return oldElement;
+                false, stringcast(oldElement))));
+        return stringcast(oldElement);
     }
 
     public Object set(int index, Object element) {
         String oldElement = getItem(index);
-        setItem(index, cast(String) element);
+        setItem(index, stringcast( element));
         fireListChange(Diffs.createListDiff(Diffs.createListDiffEntry(index,
-                false, oldElement), Diffs.createListDiffEntry(index, true,
+                false, stringcast(oldElement)), Diffs.createListDiffEntry(index, true,
                 element)));
-        return oldElement;
+        return stringcast(oldElement);
     }
 
     public Object move(int oldIndex, int newIndex) {
@@ -131,10 +131,10 @@ public abstract class SWTObservableList : AbstractObservableList {
         int size = doGetSize();
         if (oldIndex < 0 || oldIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "oldIndex: " + oldIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("oldIndex: {}, size:{}", oldIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
         if (newIndex < 0 || newIndex >= size)
             throw new IndexOutOfBoundsException(
-                    "newIndex: " + newIndex + ", size:" + size); //$NON-NLS-1$ //$NON-NLS-2$
+                    Format("newIndex: {}, size:{}", newIndex, size)); //$NON-NLS-1$ //$NON-NLS-2$
 
         String[] items = getItems();
         String[] newItems = new String[size];
@@ -152,9 +152,9 @@ public abstract class SWTObservableList : AbstractObservableList {
         }
         setItems(newItems);
         fireListChange(Diffs.createListDiff(Diffs.createListDiffEntry(oldIndex,
-                false, element), Diffs.createListDiffEntry(newIndex, true,
-                element)));
-        return element;
+                false, stringcast(element)), Diffs.createListDiffEntry(newIndex, true,
+                stringcast(element))));
+        return stringcast(element);
     }
 
     public bool removeAll(Collection c) {

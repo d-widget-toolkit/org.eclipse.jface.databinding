@@ -14,6 +14,7 @@
  *******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.ViewerSingleSelectionObservableValue;
+import org.eclipse.jface.internal.databinding.viewers.SelectionProviderSingleSelectionObservableValue;
 
 import java.lang.all;
 

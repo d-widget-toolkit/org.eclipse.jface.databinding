@@ -26,7 +26,8 @@ import org.eclipse.jface.internal.databinding.provisional.viewers.ViewerLabelPro
  */
 public abstract class ListeningLabelProvider : ViewerLabelProvider {
 
-    private ISetChangeListener listener = new class() ISetChangeListener {
+    private ISetChangeListener listener;
+    class _Listener : ISetChangeListener {
         public void handleSetChange(SetChangeEvent event) {
             for (Iterator it = event.diff.getAdditions().iterator(); it.hasNext();) {
                 addListenerTo(it.next());
@@ -43,6 +44,7 @@ public abstract class ListeningLabelProvider : ViewerLabelProvider {
      * @param itemsThatNeedLabels
      */
     public this(IObservableSet itemsThatNeedLabels) {
+listener = new _Listener();
         this.items = itemsThatNeedLabels;
         items.addSetChangeListener(listener);
         for (Iterator it = items.iterator(); it.hasNext();) {

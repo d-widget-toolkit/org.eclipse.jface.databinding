@@ -11,6 +11,10 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.ObservableCollectionContentProvider;
+import org.eclipse.jface.internal.databinding.viewers.ViewerUpdater;
+import org.eclipse.jface.internal.databinding.viewers.TableViewerUpdater;
+import org.eclipse.jface.internal.databinding.viewers.ListViewerUpdater;
+import org.eclipse.jface.internal.databinding.viewers.ObservableViewerElementSet;
 
 import java.lang.all;
 

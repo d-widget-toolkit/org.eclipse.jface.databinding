@@ -70,7 +70,7 @@ public class TextEditableObservableValue : AbstractSWTObservableValue {
         
         text.setEditable(newValue.booleanValue());
         
-        if (!oldValue.equals(newValue)) {
+        if (!oldValue.opEquals(newValue)) {
             fireValueChange(Diffs.createValueDiff(oldValue, newValue));
         }
     }

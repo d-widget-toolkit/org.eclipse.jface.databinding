@@ -48,17 +48,17 @@ public class LabelObservableValue : AbstractSWTObservableValue {
         String newValue = value is null ? "" : value.toString(); //$NON-NLS-1$
         label.setText(newValue);
         
-        if (!newValue.opEquals(oldValue)) {
+        if (!newValue.equals(oldValue)) {
             fireValueChange(Diffs.createValueDiff(oldValue, newValue));
         }
     }
 
     public Object doGetValue() {
-        return label.getText();
+        return stringcast(label.getText());
     }
 
     public Object getValueType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 
 }

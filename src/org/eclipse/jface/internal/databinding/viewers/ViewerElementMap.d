@@ -11,6 +11,7 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.ViewerElementMap;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementWrapper;
 
 import java.lang.all;
 
@@ -40,6 +41,48 @@ import org.eclipse.jface.viewers.StructuredViewer;
  * @since 1.2
  */
 public class ViewerElementMap : Map { 
+
+public bool containsKey(String o) {
+    return containsKey(stringcast(o));
+}
+public bool containsValue(String o) {
+    return containsValue(stringcast(o));
+}
+public Object put(Object k, String v) {
+    return put((k),stringcast(v));
+}
+public Object put(String k, Object v) {
+    return put(stringcast(k),(v));
+}
+public Object put(String k, String v) {
+    return put(stringcast(k),stringcast(v));
+}
+public Object get(String k) {
+    return get(stringcast(k));
+}
+public Object remove(String k) {
+    return remove(stringcast(k));
+}
+public int opApply (int delegate(ref Object value) dg){
+    foreach( entry; entrySet() ){
+        auto me = cast(Map.Entry)entry;
+        auto v = me.getValue();
+        int res = dg( v );
+        if( res ) return res;
+    }
+    return 0;
+}
+public int opApply (int delegate(ref Object key, ref Object value) dg){
+    foreach( entry; entrySet() ){
+        auto me = cast(Map.Entry)entry;
+        auto k = me.getKey();
+        auto v = me.getValue();
+        int res = dg( k, v );
+        if( res ) return res;
+    }
+    return 0;
+}
+
     private Map wrappedMap;
     private IElementComparer comparer;
 
@@ -50,7 +93,7 @@ public class ViewerElementMap : Map {
      *            the {@link IElementComparer} used for comparing keys.
      */
     public this(IElementComparer comparer) {
-        Assert.isNotNull(comparer);
+        Assert.isNotNull(cast(Object)comparer);
         this.wrappedMap = new HashMap();
         this.comparer = comparer;
     }
@@ -66,7 +109,7 @@ public class ViewerElementMap : Map {
      */
     public this(Map map, IElementComparer comparer) {
         this(comparer);
-        Assert.isNotNull(map);
+        Assert.isNotNull(cast(Object)map);
         putAll(map);
     }
 
@@ -85,6 +128,27 @@ public class ViewerElementMap : Map {
     public Set entrySet() {
         final Set wrappedEntrySet = wrappedMap.entrySet();
         return new class() Set {
+public bool add(String o) {
+    return add(stringcast(o));
+}
+public bool remove(String o) {
+    return remove(stringcast(o));
+}
+public bool contains(String o) {
+    return contains(stringcast(o));
+}
+public int opApply (int delegate(ref Object value) dg){
+    auto it = iterator();
+    while(it.hasNext()){
+        auto v = it.next();
+        int res = dg( v );
+        if( res ) return res;
+    }
+    return 0;
+}
+public String toString(){
+    return super.toString();
+}
             public bool add(Object o) {
                 throw new UnsupportedOperationException();
             }
@@ -99,7 +163,7 @@ public class ViewerElementMap : Map {
 
             public bool contains(Object o) {
                 for (Iterator iterator = iterator(); iterator.hasNext();)
-                    if (iterator.next().equals(o))
+                    if (iterator.next().opEquals(o))
                         return true;
                 return false;
             }
@@ -139,20 +203,20 @@ public class ViewerElementMap : Map {
                                 return wrappedEntry.setValue(value);
                             }
 
-                            public bool equals(Object obj) {
+                            public override equals_t opEquals(Object obj) {
                                 if (obj is this)
                                     return true;
                                 if (obj is null || !(null !is cast(Map.Entry)obj))
                                     return false;
                                 Map.Entry that = cast(Map.Entry) obj;
-                                return comparer.equals(this.getKey(), that
+                                return comparer.opEquals(this.getKey(), that
                                         .getKey())
-                                        && Util.equals(this.getValue(), that
+                                        && Util.opEquals(this.getValue(), that
                                                 .getValue());
                             }
 
-                            public int hashCode() {
-                                return wrappedEntry.hashCode();
+                            public override hash_t toHash() {
+                                return wrappedEntry.toHash();
                             }
                         };
                     }
@@ -180,25 +244,25 @@ public class ViewerElementMap : Map {
                         throw new UnsupportedOperationException();
                     }
 
-                    public bool equals(Object obj) {
+                    public override equals_t opEquals(Object obj) {
                         if (obj is this)
                             return true;
                         if (obj is null || !(null !is cast(Map.Entry)obj))
                             return false;
                         Map.Entry that = cast(Map.Entry) obj;
-                        return Util.equals(wrappedKey, that.getKey())
+                        return Util.opEquals(wrappedKey, that.getKey())
                                 && Util
-                                        .equals(this.getValue(), that
+                                        .opEquals(this.getValue(), that
                                                 .getValue());
                     }
 
-                    public int hashCode() {
-                        return wrappedKey.hashCode()
+                    public override hash_t toHash() {
+                        return wrappedKey.toHash()
                                 ^ (getValue() is null ? 0 : getValue()
-                                        .hashCode());
+                                        .toHash());
                     }
                 };
-                return wrappedEntrySet.remove(wrappedEntry);
+                return wrappedEntrySet.remove(cast(Object)wrappedEntry);
             }
 
             public bool removeAll(Collection c) {
@@ -214,7 +278,7 @@ public class ViewerElementMap : Map {
                 outer: for (Iterator iterator = iterator(); iterator.hasNext();) {
                     Object entry = iterator.next();
                     for (int i = 0; i < toRetain.length; i++)
-                        if (entry.equals(toRetain[i]))
+                        if (entry.opEquals(toRetain[i]))
                             continue outer;
                     iterator.remove();
                     changed = true;
@@ -233,8 +297,7 @@ public class ViewerElementMap : Map {
             public Object[] toArray(Object[] a) {
                 int size = size();
                 if (a.length < size) {
-                    a = cast(Object[]) Array.newInstance(a.getClass()
-                            .getComponentType(), size);
+                    a = new Object[size];
                 }
                 int i = 0;
                 for (Iterator iterator = iterator(); iterator.hasNext();) {
@@ -244,7 +307,7 @@ public class ViewerElementMap : Map {
                 return a;
             }
 
-            public bool equals(Object obj) {
+            public override equals_t opEquals(Object obj) {
                 if (obj is this)
                     return true;
                 if (obj is null || !(null !is cast(Set)obj))
@@ -253,8 +316,8 @@ public class ViewerElementMap : Map {
                 return this.size() is that.size() && containsAll(that);
             }
 
-            public int hashCode() {
-                return wrappedEntrySet.hashCode();
+            public override hash_t toHash() {
+                return wrappedEntrySet.toHash();
             }
         };
     }
@@ -270,6 +333,27 @@ public class ViewerElementMap : Map {
     public Set keySet() {
         final Set wrappedKeySet = wrappedMap.keySet();
         return new class() Set {
+public bool add(String o) {
+    return add(stringcast(o));
+}
+public bool remove(String o) {
+    return remove(stringcast(o));
+}
+public bool contains(String o) {
+    return contains(stringcast(o));
+}
+public int opApply (int delegate(ref Object value) dg){
+    auto it = iterator();
+    while(it.hasNext()){
+        auto v = it.next();
+        int res = dg( v );
+        if( res ) return res;
+    }
+    return 0;
+}
+public String toString(){
+    return super.toString();
+}
             public bool add(Object o) {
                 throw new UnsupportedOperationException();
             }
@@ -332,7 +416,7 @@ public class ViewerElementMap : Map {
                 outer: for (Iterator iterator = iterator(); iterator.hasNext();) {
                     Object element = iterator.next();
                     for (int i = 0; i < toRetain.length; i++)
-                        if (comparer.equals(element, toRetain[i]))
+                        if (comparer.opEquals(element, toRetain[i]))
                             continue outer;
                     // element not contained in collection, remove.
                     remove(element);
@@ -355,15 +439,14 @@ public class ViewerElementMap : Map {
                         .toArray(new ViewerElementWrapper[size]);
                 Object[] result = a;
                 if (a.length < size) {
-                    result = cast(Object[]) Array.newInstance(a.getClass()
-                            .getComponentType(), size);
+                    result = new Object[size];
                 }
                 for (int i = 0; i < size; i++)
                     result[i] = wrappedArray[i].unwrap();
                 return result;
             }
 
-            public bool equals(Object obj) {
+            public override equals_t opEquals(Object obj) {
                 if (obj is this)
                     return true;
                 if (obj is null || !(null !is cast(Set)obj))
@@ -372,8 +455,8 @@ public class ViewerElementMap : Map {
                 return this.size() is that.size() && containsAll(that);
             }
 
-            public int hashCode() {
-                return wrappedKeySet.hashCode();
+            public override hash_t toHash() {
+                return wrappedKeySet.toHash();
             }
         };
     }
@@ -402,17 +485,17 @@ public class ViewerElementMap : Map {
         return wrappedMap.values();
     }
 
-    public bool equals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if (obj is this)
             return true;
         if (obj is null || !(null !is cast(Map)obj))
             return false;
         Map that = cast(Map) obj;
-        return this.entrySet().equals(that.entrySet());
+        return (cast(Object)this.entrySet()).opEquals(cast(Object)that.entrySet());
     }
 
-    public int hashCode() {
-        return wrappedMap.hashCode();
+    public override hash_t toHash() {
+        return wrappedMap.toHash();
     }
 
     /**

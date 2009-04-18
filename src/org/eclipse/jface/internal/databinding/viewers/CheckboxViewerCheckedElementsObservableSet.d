@@ -10,11 +10,15 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.CheckboxViewerCheckedElementsObservableSet;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementSet;
+import org.eclipse.jface.internal.databinding.viewers.CheckableCheckedElementsObservableSet;
 
 import java.lang.all;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.jface.databinding.viewers.IViewerObservableSet;
@@ -31,6 +35,69 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class CheckboxViewerCheckedElementsObservableSet :
         CheckableCheckedElementsObservableSet , IViewerObservableSet {
+    public override Object getElementType(){
+        return super.getElementType();
+    }
+    public override bool add(Object o){
+        return super.add(o);
+    }
+    public override bool add(String o){
+        return super.add(o);
+    }
+    public override bool addAll(Collection o){
+        return super.addAll(o);
+    }
+    public override bool contains(Object o){
+        return super.contains(o);
+    }
+    public override bool containsAll(Collection o){
+        return super.containsAll(o);
+    }
+    public override void clear(){
+        super.clear();
+    }
+    public override bool isEmpty(){
+        return super.isEmpty();
+    }
+    public override equals_t opEquals(Object o){
+        return super.opEquals(o);
+    }
+    public override Iterator iterator(){
+        return super.iterator();
+    }
+    public override hash_t toHash(){
+        return super.toHash();
+    }
+    public override bool remove(String o){
+        return super.remove(o);
+    }
+    public override bool remove(Object o){
+        return super.remove(o);
+    }
+    //public override Object remove(int o){
+    //    return super.remove(o);
+    //}
+    public override bool removeAll(Collection o){
+        return super.removeAll(o);
+    }
+    public override bool retainAll(Collection o){
+        return super.retainAll(o);
+    }
+    public override int size(){
+        return super.size();
+    }
+    public override Object[] toArray(){
+        return super.toArray();
+    }
+    public override Object[] toArray(Object[] o){
+        return super.toArray(o);
+    }
+    //public override String[] toArray(String[] o){
+    //    return super.toArray(o);
+    //}
+    public override int opApply( int delegate( ref Object v ) dg ){
+        return super.opApply(dg);
+    }
     private StructuredViewer viewer;
 
     /**

@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.swt.ControlUpdater;
+import org.eclipse.jface.internal.databinding.provisional.swt.SWTUtil;
 
 import java.lang.all;
 
@@ -103,15 +104,16 @@ public abstract class ControlUpdater {
         
     }
     
-    private Runnable updateRunnable = new class() Runnable {
+    private Runnable updateRunnable;
+    class UpdateRunnable : Runnable {
         public void run() {
             updateControl();
         }
     };
     
-    private PrivateInterface privateInterface = new PrivateInterface();
+    private PrivateInterface privateInterface;
     private Control theControl;
-    private IObservable[] dependencies = new IObservable[0];
+    private IObservable[] dependencies;
     private bool dirty = false;
     
     /**
@@ -120,6 +122,8 @@ public abstract class ControlUpdater {
      * @param toUpdate control to update
      */
     public this(Control toUpdate) {
+updateRunnable = new UpdateRunnable();
+privateInterface = new PrivateInterface();
         theControl = toUpdate;
         
         theControl.addDisposeListener(privateInterface);

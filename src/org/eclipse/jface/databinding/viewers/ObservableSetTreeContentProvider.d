@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 module org.eclipse.jface.databinding.viewers.ObservableSetTreeContentProvider;
+import org.eclipse.jface.databinding.viewers.TreeStructureAdvisor;
 
 import java.lang.all;
 

@@ -61,16 +61,16 @@ public class ShellObservableValue : AbstractSWTObservableValue {
         String newValue = value is null ? "" : value.toString(); //$NON-NLS-1$
         shell.setText(newValue);
 
-        if (!newValue.opEquals(oldValue)) {
-            fireValueChange(Diffs.createValueDiff(oldValue, newValue));
+        if (!newValue.equals(oldValue)) {
+            fireValueChange(Diffs.createValueDiff(stringcast(oldValue), stringcast(newValue)));
         }
     }
 
     protected Object doGetValue() {
-        return shell.getText();
+        return stringcast(shell.getText());
     }
 
     public Object getValueType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 }

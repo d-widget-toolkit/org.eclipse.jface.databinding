@@ -49,7 +49,7 @@ public class TextObservableValue : AbstractSWTVetoableValue {
     /**
      * {@link Text} widget that this is being observed.
      */
-    private final Text text;
+    private const Text text;
 
     /**
      * Flag to track when the model is updating the widget. When
@@ -62,7 +62,7 @@ public class TextObservableValue : AbstractSWTVetoableValue {
      * SWT event that on firing this observable will fire change events to its
      * listeners.
      */
-    private final int updateEventType;
+    private const int updateEventType;
 
     /**
      * Valid types for the {@link #updateEventType}.
@@ -75,13 +75,14 @@ public class TextObservableValue : AbstractSWTVetoableValue {
      */
     private String oldValue;
 
-    private Listener updateListener = new class() Listener {
+    private Listener updateListener;
+    class UpdateListener : Listener {
         public void handleEvent(Event event) {
             if (!updating) {
                 String newValue = text.getText();
 
                 if (!newValue.equals(oldValue)) {
-                    fireValueChange(Diffs.createValueDiff(oldValue, newValue));                 
+                    fireValueChange(Diffs.createValueDiff(stringcast(oldValue), stringcast(newValue)));                 
                     oldValue = newValue;
                 }
             }
@@ -115,6 +116,7 @@ public class TextObservableValue : AbstractSWTVetoableValue {
      * @param updateEventType
      */
     public this(Realm realm, Text text, int updateEventType) {
+updateListener = new UpdateListener();
         super(realm, text);
         
         bool eventValid = false;
@@ -123,7 +125,7 @@ public class TextObservableValue : AbstractSWTVetoableValue {
         }
         if (!eventValid) {
             throw new IllegalArgumentException(
-                    "UpdateEventType [" + updateEventType + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                    Format("UpdateEventType [{}] is not supported.", updateEventType )); //$NON-NLS-1$//$NON-NLS-2$
         }
         this.text = text;
         this.updateEventType = updateEventType;
@@ -138,10 +140,10 @@ public class TextObservableValue : AbstractSWTVetoableValue {
                 if (!updating) {
                     String currentText = text
                             .getText();
-                    String newText = currentText.substring(0, e.start) + e.text
-                            + currentText.substring(e.end);
-                    if (!fireValueChanging(Diffs.createValueDiff(currentText,
-                            newText))) {
+                    String newText = currentText.substring(0, e.start) ~ e.text
+                            ~ currentText.substring(e.end);
+                    if (!fireValueChanging(Diffs.createValueDiff(stringcast(currentText),
+                            stringcast(newText)))) {
                         e.doit = false;
                     }
                 }
@@ -175,7 +177,7 @@ public class TextObservableValue : AbstractSWTVetoableValue {
      * @see org.eclipse.core.databinding.observable.value.AbstractVetoableValue#doGetValue()
      */
     public Object doGetValue() {
-        return oldValue = text.getText();
+        return stringcast(oldValue = text.getText());
     }
 
     /**
@@ -185,7 +187,7 @@ public class TextObservableValue : AbstractSWTVetoableValue {
      * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
      */
     public Object getValueType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 
     public void dispose() {

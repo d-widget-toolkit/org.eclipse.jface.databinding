@@ -41,15 +41,15 @@ public class ViewerElementWrapper {
         this.comparer = comparer;
     }
 
-    public bool equals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if (!(null !is cast(ViewerElementWrapper)obj)) {
             return false;
         }
-        return comparer.equals(element, (cast(ViewerElementWrapper) obj).element);
+        return comparer.opEquals(element, (cast(ViewerElementWrapper) obj).element);
     }
 
-    public int hashCode() {
-        return comparer.hashCode(element);
+    public override hash_t toHash() {
+        return comparer.toHash(element);
     }
 
     Object unwrap() {

@@ -55,7 +55,7 @@ public class ViewerInputObservableValue : AbstractObservableValue {
   protected void doSetValue( Object value ) {
     Object oldValue = doGetValue();
     viewer.setInput( value );
-    if ( !Util.equals( oldValue, value ) ) {
+    if ( !Util.opEquals( oldValue, value ) ) {
       fireValueChange( Diffs.createValueDiff( oldValue, value ) );
     }
   }

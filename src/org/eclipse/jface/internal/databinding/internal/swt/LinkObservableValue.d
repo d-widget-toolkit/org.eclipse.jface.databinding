@@ -39,11 +39,11 @@ public class LinkObservableValue : AbstractSWTObservableValue {
     }
 
     public Object doGetValue() {
-        return link.getText();
+        return stringcast(link.getText());
     }
 
     public Object getValueType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 
 }

@@ -35,7 +35,8 @@ public class ObservableMapLabelProvider : LabelProvider
 
     private final IObservableMap[] attributeMaps;
 
-    private IMapChangeListener mapChangeListener = new class() IMapChangeListener {
+    private IMapChangeListener mapChangeListener;
+    class MapChangeListener : IMapChangeListener {
         public void handleMapChange(MapChangeEvent event) {
             Set affectedElements = event.diff.getChangedKeys();
             LabelProviderChangedEvent newEvent = new LabelProviderChangedEvent(
@@ -56,7 +57,8 @@ public class ObservableMapLabelProvider : LabelProvider
      * @param attributeMaps
      */
     public this(IObservableMap[] attributeMaps) {
-        System.arraycopy(attributeMaps, 0, this.attributeMaps = attributeMaps, 0, attributeMaps.length);
+mapChangeListener = new MapChangeListener();
+        System.arraycopyT(attributeMaps, 0, this.attributeMaps = attributeMaps, 0, attributeMaps.length);
         for (int i = 0; i < attributeMaps.length; i++) {
             attributeMaps[i].addMapChangeListener(mapChangeListener);
         }

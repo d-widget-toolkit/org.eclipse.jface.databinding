@@ -9,6 +9,7 @@
  *     Boris Bokowski, IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.swt.CompositeUpdater;
+import org.eclipse.jface.internal.databinding.provisional.swt.SWTUtil;
 
 import java.lang.all;
 
@@ -43,7 +44,7 @@ public abstract class CompositeUpdater {
 
         private bool dirty = true;
 
-        private IObservable[] dependencies = new IObservable[0];
+        private IObservable[] dependencies;
 
         this(Widget widget, Object element) {
             this.widget = widget;
@@ -99,7 +100,10 @@ public abstract class CompositeUpdater {
     
     private class LayoutRunnable : Runnable {
         private bool posted = false;
-        private Set controlsToLayout = new HashSet();
+        private Set controlsToLayout;
+        this(){
+            controlsToLayout = new HashSet();
+        }
         void add(Control toLayout) {
             controlsToLayout.add(toLayout);
             if (!posted) {
@@ -114,7 +118,7 @@ public abstract class CompositeUpdater {
         }
     }
     
-    private LayoutRunnable layoutRunnable = new LayoutRunnable();
+    private LayoutRunnable layoutRunnable;
     
     /**
      * To be called from {@link #updateWidget(Widget, Object)} or {@link #createWidget(int)}
@@ -149,7 +153,7 @@ public abstract class CompositeUpdater {
 
     }
 
-    private PrivateInterface privateInterface = new PrivateInterface();
+    private PrivateInterface privateInterface;
 
     private Composite theComposite;
 
@@ -166,6 +170,8 @@ public abstract class CompositeUpdater {
      *            an observable list to track
      */
     public this(Composite toUpdate, IObservableList model) {
+layoutRunnable = new LayoutRunnable();
+privateInterface = new PrivateInterface();
         this.theComposite = toUpdate;
         this.model = model;
 

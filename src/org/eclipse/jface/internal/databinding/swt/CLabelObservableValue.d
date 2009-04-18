@@ -54,11 +54,11 @@ public class CLabelObservableValue : AbstractSWTObservableValue {
     }
 
     public Object doGetValue() {
-        return label.getText();
+        return stringcast(label.getText());
     }
 
     public Object getValueType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 
 }

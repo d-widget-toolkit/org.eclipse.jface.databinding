@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.swt.MenuUpdater;
+import org.eclipse.jface.internal.databinding.provisional.swt.SWTUtil;
 
 import java.lang.all;
 
@@ -88,15 +89,16 @@ public abstract class MenuUpdater {
         
     }
     
-    private Runnable updateRunnable = new class() Runnable {
+    private Runnable updateRunnable;
+    class UpdateRunnable : Runnable {
         public void run() {
             updateMenu();
         }
     };
     
-    private PrivateInterface privateInterface = new PrivateInterface();
+    private PrivateInterface privateInterface;
     private Menu theMenu;
-    private IObservable[] dependencies = new IObservable[0];
+    private IObservable[] dependencies;
     private bool dirty = false;
     
     /**
@@ -105,6 +107,8 @@ public abstract class MenuUpdater {
      * @param toUpdate menu to update
      */
     public this(Menu toUpdate) {
+updateRunnable = new UpdateRunnable();
+privateInterface = new PrivateInterface();
         theMenu = toUpdate;
         
         theMenu.addDisposeListener(privateInterface);

@@ -13,11 +13,13 @@
  *     Michael Krauter, bug 180223
  *******************************************************************************/
 module org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 
 import java.lang.all;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+static import java.util.List;
 
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -66,7 +68,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public class SWTObservables {
 
-    private static java.util.List realms = new ArrayList();
+    private static java.util.List.List realms;
+    static this(){
+        realms = new ArrayList();
+    }
 
     /**
      * Returns the realm representing the UI thread for the given display.
@@ -174,7 +179,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -199,7 +204,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -224,7 +229,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -247,7 +252,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -284,7 +289,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -311,7 +316,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -342,7 +347,7 @@ public class SWTObservables {
         }
 
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -389,7 +394,7 @@ public class SWTObservables {
         }
         
         throw new IllegalArgumentException(
-                "Widget [" + control.getClass().getName() + "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
+                "Widget [" ~ Class.fromObject(control).getName() ~ "] is not supported."); //$NON-NLS-1$//$NON-NLS-2$
     }
 
     private static class DisplayRealm : Realm {
@@ -420,8 +425,8 @@ public class SWTObservables {
          * 
          * @see java.lang.Object#hashCode()
          */
-        public int hashCode() {
-            return (display is null) ? 0 : display.hashCode();
+        public override hash_t toHash() {
+            return (display is null) ? 0 : display.toHash();
         }
 
         /*
@@ -429,18 +434,18 @@ public class SWTObservables {
          * 
          * @see java.lang.Object#equals(java.lang.Object)
          */
-        public bool equals(Object obj) {
+        public override equals_t opEquals(Object obj) {
             if (this is obj)
                 return true;
             if (obj is null)
                 return false;
-            if (getClass() !is obj.getClass())
+            if (Class.fromObject(this) !is Class.fromObject(obj))
                 return false;
             final DisplayRealm other = cast(DisplayRealm) obj;
             if (display is null) {
                 if (other.display !is null)
                     return false;
-            } else if (!display.equals(other.display))
+            } else if (!display.opEquals(other.display))
                 return false;
             return true;
         }

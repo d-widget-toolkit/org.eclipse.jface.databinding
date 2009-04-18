@@ -35,9 +35,9 @@ import org.eclipse.core.internal.databinding.observable.tree.TreePath;
  */
 public class LeafNodesSet : AbstractObservableSet {
 
-    private HashSet leafNodes = new HashSet();
+    private HashSet leafNodes;
 
-    private HashMap mapElementsOntoNodeInfo = new HashMap();
+    private HashMap mapElementsOntoNodeInfo;
 
     private IUnorderedTreeProvider tree;
 
@@ -120,6 +120,8 @@ public class LeafNodesSet : AbstractObservableSet {
      *            tree whose leaf nodes will be computed
      */
     public this(Object initialInput, IUnorderedTreeProvider tree) {
+leafNodes = new HashSet();
+mapElementsOntoNodeInfo = new HashMap();
         super(tree.getRealm());
         this.tree = tree;
         if (initialInput !is null) {

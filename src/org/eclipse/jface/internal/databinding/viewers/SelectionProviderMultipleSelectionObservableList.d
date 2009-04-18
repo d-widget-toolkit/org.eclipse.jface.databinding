@@ -39,7 +39,7 @@ public class SelectionProviderMultipleSelectionObservableList :
     protected ISelectionProvider selectionProvider;
     protected bool handlingSelection;
     protected bool updating;
-    protected SelectionListener selectionListener = new SelectionListener();
+    protected SelectionListener selectionListener;
 
     class SelectionListener : ISelectionChangedListener {
         public void selectionChanged(SelectionChangedEvent event) {
@@ -66,6 +66,7 @@ public class SelectionProviderMultipleSelectionObservableList :
      */
     public this(Realm realm,
             ISelectionProvider selectionProvider, Object elementType) {
+selectionListener = new SelectionListener();
         super(realm, new ArrayList(getSelectionList(selectionProvider)), elementType);
         this.selectionProvider = selectionProvider;
         selectionProvider.addSelectionChangedListener(selectionListener);
@@ -93,7 +94,7 @@ public class SelectionProviderMultipleSelectionObservableList :
 
     protected static List getSelectionList(ISelectionProvider selectionProvider) {
         if (selectionProvider is null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(null);
         }
         return getSelectionList(selectionProvider.getSelection());
     }

@@ -35,7 +35,11 @@ import org.eclipse.swt.graphics.Image;
 public class ViewerLabelProvider : IViewerLabelProvider,
         ILabelProvider {
 
-    private List listeners = new ArrayList();
+    private List listeners;
+
+    this(){
+        listeners = new ArrayList();
+    }
 
     /**
      * Subclasses should override this method. They should not call the base
@@ -48,8 +52,8 @@ public class ViewerLabelProvider : IViewerLabelProvider,
     protected final void fireChangeEvent(Collection changes) {
         final LabelProviderChangedEvent event = new LabelProviderChangedEvent(
                 this, changes.toArray());
-        ILabelProviderListener[] listenerArray = cast(ILabelProviderListener[]) listeners
-                .toArray(new ILabelProviderListener[listeners.size()]);
+        ILabelProviderListener[] listenerArray = arraycast!(ILabelProviderListener)( listeners
+                .toArray());
         for (int i = 0; i < listenerArray.length; i++) {
             ILabelProviderListener listener = listenerArray[i];
             try {
@@ -57,7 +61,7 @@ public class ViewerLabelProvider : IViewerLabelProvider,
             } catch (Exception e) {
                 Policy.getLog().log(
                         new Status(IStatus.ERROR, Policy.JFACE_DATABINDING, e
-                                .getLocalizedMessage(), e));
+                                .msg, e));
             }
         }
     }
@@ -75,7 +79,7 @@ public class ViewerLabelProvider : IViewerLabelProvider,
     }
 
     public void addListener(ILabelProviderListener listener) {
-        listeners.add(listener);
+        listeners.add(cast(Object)listener);
     }
 
     public void dispose() {
@@ -87,7 +91,7 @@ public class ViewerLabelProvider : IViewerLabelProvider,
     }
 
     public void removeListener(ILabelProviderListener listener) {
-        listeners.remove(listener);
+        listeners.remove(cast(Object)listener);
     }
 
 }

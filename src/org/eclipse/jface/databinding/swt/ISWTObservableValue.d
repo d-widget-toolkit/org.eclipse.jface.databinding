@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 module org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.ISWTObservable;
 
 import java.lang.all;
 

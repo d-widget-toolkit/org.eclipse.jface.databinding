@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.swt.SWTUtil;
+import org.eclipse.jface.internal.databinding.provisional.swt.WorkQueue;
 
 import java.lang.all;
 
@@ -29,7 +30,10 @@ public class SWTUtil {
     /**
      * Stores a work queue for each display
      */
-    private static Map mapDisplayOntoWorkQueue = new HashMap();
+    private static Map mapDisplayOntoWorkQueue;
+    static this(){
+        mapDisplayOntoWorkQueue = new HashMap();
+    }
 
     private this() {
     }

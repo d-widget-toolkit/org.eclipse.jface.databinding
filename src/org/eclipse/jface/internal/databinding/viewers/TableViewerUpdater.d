@@ -11,6 +11,7 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.TableViewerUpdater;
+import org.eclipse.jface.internal.databinding.viewers.ViewerUpdater;
 
 import java.lang.all;
 

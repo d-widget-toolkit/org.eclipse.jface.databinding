@@ -13,6 +13,7 @@
  *     Eric Rizzo - bug 134884
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.CComboObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 
 import java.lang.all;
 
@@ -85,7 +86,7 @@ public class CComboObservableValue : AbstractSWTObservableValue {
             };
             ccombo.addModifyListener(modifyListener);
         } else
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(null);
     }
 
     public void doSetValue(Object value) {
@@ -101,14 +102,15 @@ public class CComboObservableValue : AbstractSWTObservableValue {
                 if (value is null) {
                     ccombo.select(-1);
                 } else if (items !is null) {
+                    auto valueStr = stringcast(value);
                     for (int i = 0; i < items.length; i++) {
-                        if (value.equals(items[i])) {
+                        if (valueStr.equals(items[i])) {
                             index = i;
                             break;
                         }
                     }
                     if (index is -1) {
-                        ccombo.setText(cast(String) value);
+                        ccombo.setText(stringcast(value));
                     } else {
                         ccombo.select(index); // -1 will not "unselect"
                     }
@@ -124,20 +126,20 @@ public class CComboObservableValue : AbstractSWTObservableValue {
 
     public Object doGetValue() {
         if (attribute.equals(SWTProperties.TEXT))
-            return ccombo.getText();
+            return stringcast(ccombo.getText());
 
         Assert.isTrue(attribute.equals(SWTProperties.SELECTION),
-                "unexpected attribute: " + attribute); //$NON-NLS-1$
+                "unexpected attribute: " ~ attribute); //$NON-NLS-1$
         // The problem with a ccombo, is that it changes the text and
         // fires before it update its selection index
-        return ccombo.getText();
+        return stringcast(ccombo.getText());
     }
 
     public Object getValueType() {
         Assert.isTrue(attribute.equals(SWTProperties.TEXT)
                 || attribute.equals(SWTProperties.SELECTION),
-                "unexpected attribute: " + attribute); //$NON-NLS-1$
-        return String.classinfo;
+                Format("unexpected attribute: {}", attribute)); //$NON-NLS-1$
+        return Class.fromType!(String);
     }
 
     /**

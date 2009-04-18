@@ -12,6 +12,7 @@
  *     Matthew Hall - bug 118516
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.SpinnerObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 
 import java.lang.all;
 
@@ -100,7 +101,7 @@ public class SpinnerObservableValue : AbstractSWTObservableValue {
                 oldValue = spinner.getMaximum();
                 spinner.setMaximum(newValue);
             } else {
-                Assert.isTrue(false, "invalid attribute name:" + attribute); //$NON-NLS-1$
+                Assert.isTrue(false, "invalid attribute name:" ~ attribute); //$NON-NLS-1$
                 return;
             }
             notifyIfChanged(oldValue, newValue);

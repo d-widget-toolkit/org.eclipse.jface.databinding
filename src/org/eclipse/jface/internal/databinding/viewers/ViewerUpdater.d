@@ -96,8 +96,8 @@ public abstract class ViewerUpdater {
                 IElementComparer comparer = viewer.getComparer();
                 Object[] selectedElements = selection.toArray();
                 for (int i = 0; i < selectedElements.length; i++) {
-                    if (comparer is null ? Util.equals(element,
-                            selectedElements[i]) : comparer.equals(element,
+                    if (comparer is null ? Util.opEquals(element,
+                            selectedElements[i]) : comparer.opEquals(element,
                             selectedElements[i])) {
                         viewer.setSelection(selection);
                         break;

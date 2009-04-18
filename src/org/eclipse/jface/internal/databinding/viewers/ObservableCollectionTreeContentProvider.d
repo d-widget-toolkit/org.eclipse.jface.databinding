@@ -11,6 +11,10 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.ObservableCollectionTreeContentProvider;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementSet;
+import org.eclipse.jface.internal.databinding.viewers.TreeViewerUpdater;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementMap;
+import org.eclipse.jface.internal.databinding.viewers.ObservableViewerElementSet;
 
 import java.lang.all;
 
@@ -104,7 +108,7 @@ public abstract class ObservableCollectionTreeContentProvider :
                 .unmodifiableObservableSet(knownElements);
 
         Assert
-                .isNotNull(collectionFactory,
+                .isNotNull(cast(Object)collectionFactory,
                         "Collection factory cannot be null"); //$NON-NLS-1$
         this.collectionFactory = collectionFactory;
     }
@@ -293,8 +297,8 @@ public abstract class ObservableCollectionTreeContentProvider :
 
         private bool equal(Object left, Object right) {
             if (comparer is null)
-                return Util.equals(left, right);
-            return comparer.equals(left, right);
+                return Util.opEquals(left, right);
+            return cast(bool)comparer.opEquals(left, right);
         }
 
         public void addParent(Object newParent) {
@@ -344,7 +348,7 @@ public abstract class ObservableCollectionTreeContentProvider :
                     children = Observables.emptyObservableSet(realm);
                 } else {
                     Assert
-                            .isTrue(Util.equals(realm, children.getRealm()),
+                            .isTrue(Util.opEquals(realm, children.getRealm()),
                                     "Children observable collection must be on the Display realm"); //$NON-NLS-1$
                     listener = createCollectionChangeListener(element);
                     addCollectionChangeListener(children, listener);

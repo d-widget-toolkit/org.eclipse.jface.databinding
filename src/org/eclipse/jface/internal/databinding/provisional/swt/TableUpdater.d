@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.swt.TableUpdater;
+import org.eclipse.jface.internal.databinding.provisional.swt.SWTUtil;
 
 import java.lang.all;
 
@@ -48,7 +49,7 @@ public abstract class TableUpdater {
 
         private bool dirty = false;
 
-        private IObservable[] dependencies = new IObservable[0];
+        private IObservable[] dependencies;
 
         private final Object element;
 
@@ -142,11 +143,12 @@ public abstract class TableUpdater {
 
     }
 
-    private PrivateInterface privateInterface = new PrivateInterface();
+    private PrivateInterface privateInterface;
 
     private Table table;
 
-    private IListChangeListener listChangeListener = new class() IListChangeListener {
+    private IListChangeListener listChangeListener;
+    class ListChangeListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             ListDiffEntry[] differences = event.diff.getDifferences();
             for (int i = 0; i < differences.length; i++) {
@@ -175,6 +177,8 @@ public abstract class TableUpdater {
      * @since 1.2
      */
     public this(Table table, IObservableList list) {
+privateInterface = new PrivateInterface();
+listChangeListener = new ListChangeListener();
         this.table = table;
         this.list = list;
         Assert.isLegal((table.getStyle() & SWT.VIRTUAL) !is 0,
@@ -195,7 +199,7 @@ public abstract class TableUpdater {
      */
     public void dispose() {
         table.removeDisposeListener(privateInterface);
-        table.removeListener(SWT.SetData, privateInterface);
+        table.removeListener(SWT.SetData, cast(Listener)privateInterface);
         list.removeListChangeListener(listChangeListener);
         table = null;
         list = null;

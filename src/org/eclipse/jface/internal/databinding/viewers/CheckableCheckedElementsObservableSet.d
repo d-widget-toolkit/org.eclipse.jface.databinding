@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.CheckableCheckedElementsObservableSet;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementSet;
 
 import java.lang.all;
 
@@ -68,8 +69,8 @@ public class CheckableCheckedElementsObservableSet :
     public this(Realm realm,
             ICheckable checkable, Object elementType, Set wrappedSet) {
         super(realm);
-        Assert.isNotNull(checkable, "Checkable cannot be null"); //$NON-NLS-1$
-        Assert.isNotNull(wrappedSet, "Wrapped set cannot be null"); //$NON-NLS-1$
+        Assert.isNotNull(cast(Object)checkable, "Checkable cannot be null"); //$NON-NLS-1$
+        Assert.isNotNull(cast(Object)wrappedSet, "Wrapped set cannot be null"); //$NON-NLS-1$
         this.checkable = checkable;
         this.wrappedSet = wrappedSet;
         this.elementType = elementType;
@@ -106,6 +107,9 @@ public class CheckableCheckedElementsObservableSet :
         return elementType;
     }
 
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
     public bool add(Object o) {
         getterCalled();
         bool added = wrappedSet.add(o);
@@ -117,6 +121,10 @@ public class CheckableCheckedElementsObservableSet :
         return added;
     }
 
+    alias AbstractObservableSet.remove remove;
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
     public bool remove(Object o) {
         getterCalled();
         bool removed = wrappedSet.remove(o);

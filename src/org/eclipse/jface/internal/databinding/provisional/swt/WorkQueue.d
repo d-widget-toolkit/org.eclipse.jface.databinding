@@ -33,20 +33,22 @@ public class WorkQueue {
 
     private bool paintListenerAttached = false;
 
-    private LinkedList pendingWork = new LinkedList();
+    private LinkedList pendingWork;
 
     private Display d;
 
-    private Set pendingWorkSet = new HashSet();
+    private Set pendingWorkSet;
 
-    private Runnable updateJob = new class() Runnable {
+    private Runnable updateJob;
+    class UpdateJob : Runnable {
         public void run() {
             doUpdate();
             updateScheduled = false;
         }
     };
 
-    private Listener paintListener = new class() Listener {
+    private Listener paintListener;
+    class PaintListener : Listener {
         public void handleEvent(Event event) {
             paintListenerAttached = false;
             d.removeFilter(SWT.Paint, this);
@@ -58,6 +60,10 @@ public class WorkQueue {
      * @param targetDisplay
      */
     public this(Display targetDisplay) {
+pendingWork = new LinkedList();
+pendingWorkSet = new HashSet();
+updateJob = new UpdateJob();
+paintListener = new PaintListener();
         d = targetDisplay;
     }
 
@@ -69,7 +75,7 @@ public class WorkQueue {
                     break;
                 }
                 next = cast(Runnable) pendingWork.removeFirst();
-                pendingWorkSet.remove(next);
+                pendingWorkSet.remove(cast(Object)next);
             }
 
             next.run();
@@ -87,11 +93,11 @@ public class WorkQueue {
      */
     public void runOnce(Runnable work) {
         synchronized (pendingWork) {
-            if (pendingWorkSet.contains(work)) {
+            if (pendingWorkSet.contains(cast(Object)work)) {
                 return;
             }
 
-            pendingWorkSet.add(work);
+            pendingWorkSet.add(cast(Object)work);
 
             asyncExec(work);
         }
@@ -108,7 +114,7 @@ public class WorkQueue {
      */
     public void asyncExec(Runnable work) {
         synchronized (pendingWork) {
-            pendingWork.add(work);
+            pendingWork.add(cast(Object)work);
             if (!updateScheduled) {
                 updateScheduled = true;
                 d.asyncExec(updateJob);
@@ -134,8 +140,8 @@ public class WorkQueue {
      */
     public void cancelExec(Runnable toCancel) {
         synchronized (pendingWork) {
-            pendingWork.remove(toCancel);
-            pendingWorkSet.remove(toCancel);
+            pendingWork.remove(cast(Object)toCancel);
+            pendingWorkSet.remove(cast(Object)toCancel);
         }
     }
 

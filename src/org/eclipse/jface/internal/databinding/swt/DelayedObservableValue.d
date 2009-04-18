@@ -55,7 +55,7 @@ public class DelayedObservableValue : AbstractSWTObservableValue {
     class ValueUpdater : Runnable {
         private final Object oldValue;
 
-        bool cancel = false;
+        bool cancel_ = false;
         bool running = false;
 
         this(Object oldValue) {
@@ -63,11 +63,11 @@ public class DelayedObservableValue : AbstractSWTObservableValue {
         }
 
         void cancel() {
-            cancel = true;
+            cancel_ = true;
         }
 
         public void run() {
-            if (!cancel)
+            if (!cancel_)
                 try {
                     running = true;
                     internalFireValueChange(oldValue);
@@ -77,21 +77,24 @@ public class DelayedObservableValue : AbstractSWTObservableValue {
         }
     }
 
-    private IStaleListener staleListener = new class() IStaleListener {
+    private IStaleListener staleListener;
+    class StaleListener : IStaleListener {
         public void handleStale(StaleEvent staleEvent) {
             if (!updating)
                 fireStale();
         }
     };
 
-    private IValueChangeListener valueChangeListener = new class() IValueChangeListener {
+    private IValueChangeListener valueChangeListener;
+    class ValueChangeListener : IValueChangeListener {
         public void handleValueChange(ValueChangeEvent event) {
             if (!updating)
                 makeDirty();
         }
     };
 
-    private Listener focusOutListener = new class() Listener {
+    private Listener focusOutListener;
+    class FocusOutListener : Listener {
         public void handleEvent(Event event) {
             // Force update on focus out
             if (dirty)
@@ -123,6 +126,9 @@ public class DelayedObservableValue : AbstractSWTObservableValue {
      */
     public this(int delayMillis,
             ISWTObservableValue observable) {
+staleListener = new StaleListener();
+valueChangeListener = new ValueChangeListener();
+focusOutListener = new FocusOutListener();
         super(observable.getRealm(), observable.getWidget());
         this.delay = delayMillis;
         this.observable = observable;
@@ -166,7 +172,7 @@ public class DelayedObservableValue : AbstractSWTObservableValue {
             // passed to setValue(). Make sure we cache whatever is set.
             cachedValue = observable.getValue();
 
-            if (!Util.equals(oldValue, cachedValue))
+            if (!Util.opEquals(oldValue, cachedValue))
                 fireValueChange(Diffs.createValueDiff(oldValue, cachedValue));
         } finally {
             updating = false;

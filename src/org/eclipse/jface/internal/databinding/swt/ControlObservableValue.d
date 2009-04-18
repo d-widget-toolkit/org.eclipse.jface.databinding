@@ -12,6 +12,7 @@
  *     Brad Reynolds - bug 170848
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.ControlObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 
 import java.lang.all;
 
@@ -41,10 +42,10 @@ public class ControlObservableValue : AbstractSWTObservableValue {
         SUPPORTED_ATTRIBUTES = new HashMap();
         SUPPORTED_ATTRIBUTES.put(SWTProperties.ENABLED, Boolean.TYPE);
         SUPPORTED_ATTRIBUTES.put(SWTProperties.VISIBLE, Boolean.TYPE);
-        SUPPORTED_ATTRIBUTES.put(SWTProperties.TOOLTIP_TEXT, String.classinfo);
-        SUPPORTED_ATTRIBUTES.put(SWTProperties.FOREGROUND, Color.classinfo);
-        SUPPORTED_ATTRIBUTES.put(SWTProperties.BACKGROUND, Color.classinfo);
-        SUPPORTED_ATTRIBUTES.put(SWTProperties.FONT, Font.classinfo);
+        SUPPORTED_ATTRIBUTES.put(SWTProperties.TOOLTIP_TEXT, Class.fromType!(String));
+        SUPPORTED_ATTRIBUTES.put(SWTProperties.FOREGROUND, Class.fromType!(Color));
+        SUPPORTED_ATTRIBUTES.put(SWTProperties.BACKGROUND, Class.fromType!(Color));
+        SUPPORTED_ATTRIBUTES.put(SWTProperties.FONT, Class.fromType!(Font));
     }
     
     /**
@@ -58,7 +59,7 @@ public class ControlObservableValue : AbstractSWTObservableValue {
         if (SUPPORTED_ATTRIBUTES.keySet().contains(attribute)) {
             this.valueType = SUPPORTED_ATTRIBUTES.get(attribute); 
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(null);
         }
     }
 
@@ -69,7 +70,7 @@ public class ControlObservableValue : AbstractSWTObservableValue {
         } else if (attribute.equals(SWTProperties.VISIBLE)) {
             control.setVisible((cast(Boolean) value).booleanValue());
         } else if (attribute.equals(SWTProperties.TOOLTIP_TEXT)) {
-            control.setToolTipText(cast(String) value);
+            control.setToolTipText(stringcast(value));
         } else if (attribute.equals(SWTProperties.FOREGROUND)) {
             control.setForeground(cast(Color) value);
         } else if (attribute.equals(SWTProperties.BACKGROUND)) {
@@ -88,7 +89,7 @@ public class ControlObservableValue : AbstractSWTObservableValue {
             return control.getVisible() ? Boolean.TRUE : Boolean.FALSE;
         }
         if (attribute.equals(SWTProperties.TOOLTIP_TEXT)) {
-            return control.getToolTipText();            
+            return stringcast(control.getToolTipText());            
         }
         if (attribute.equals(SWTProperties.FOREGROUND))  {
             return control.getForeground();

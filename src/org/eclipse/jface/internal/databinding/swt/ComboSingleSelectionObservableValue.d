@@ -11,6 +11,7 @@
  *     Ashley Cambrell - bugs 198903, 198904
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.ComboSingleSelectionObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SingleSelectionObservableValue;
 
 import java.lang.all;
 

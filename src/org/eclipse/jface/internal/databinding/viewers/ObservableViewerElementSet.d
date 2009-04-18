@@ -11,6 +11,7 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.ObservableViewerElementSet;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementSet;
 
 import java.lang.all;
 
@@ -62,7 +63,7 @@ public class ObservableViewerElementSet : AbstractObservableSet {
             IElementComparer comparer) {
         super(realm);
 
-        Assert.isNotNull(comparer);
+        Assert.isNotNull(cast(Object)comparer);
         this.wrappedSet = new ViewerElementSet(comparer);
         this.elementType = elementType;
         this.comparer = comparer;
@@ -157,7 +158,7 @@ public class ObservableViewerElementSet : AbstractObservableSet {
             // Cannot rely on c.contains(element) because we must compare
             // elements using IElementComparer.
             for (int i = 0; i < toRetain.length; i++) {
-                if (comparer.equals(element, toRetain[i]))
+                if (comparer.opEquals(element, toRetain[i]))
                     continue outer;
             }
             iterator.remove();

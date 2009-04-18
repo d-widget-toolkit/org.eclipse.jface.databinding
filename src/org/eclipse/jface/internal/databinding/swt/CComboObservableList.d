@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.CComboObservableList;
+import org.eclipse.jface.internal.databinding.swt.SWTObservableList;
 
 import java.lang.all;
 

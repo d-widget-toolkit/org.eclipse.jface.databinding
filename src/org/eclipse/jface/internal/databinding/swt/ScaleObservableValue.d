@@ -10,6 +10,7 @@
  *     Peter Centgraf - bug 175763
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.swt.ScaleObservableValue;
+import org.eclipse.jface.internal.databinding.swt.SWTProperties;
 
 import java.lang.all;
 
@@ -77,7 +78,7 @@ public class ScaleObservableValue : AbstractSWTObservableValue {
         } else if (!attribute.equals(SWTProperties.MIN)
                 && !attribute.equals(SWTProperties.MAX)) {
             throw new IllegalArgumentException(
-                    "Attribute name not valid: " + attribute); //$NON-NLS-1$
+                    "Attribute name not valid: " ~ attribute); //$NON-NLS-1$
         }
     }
 
@@ -98,7 +99,7 @@ public class ScaleObservableValue : AbstractSWTObservableValue {
                 oldValue = scale.getMaximum();
                 scale.setMaximum(newValue);
             } else {
-                Assert.isTrue(false, "invalid attribute name:" + attribute); //$NON-NLS-1$
+                Assert.isTrue(false, "invalid attribute name:" ~ attribute); //$NON-NLS-1$
                 return;
             }
             
@@ -110,7 +111,7 @@ public class ScaleObservableValue : AbstractSWTObservableValue {
 
     public Object doGetValue() {
         int value = 0;
-        if (attribute.opEquals(SWTProperties.SELECTION)) {
+        if (attribute.equals(SWTProperties.SELECTION)) {
             value = scale.getSelection();
         } else if (attribute.equals(SWTProperties.MIN)) {
             value = scale.getMinimum();

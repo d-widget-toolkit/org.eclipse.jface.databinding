@@ -118,8 +118,8 @@ public class TreeViewerUpdater {
                     for (int j = 0; j < path.getSegmentCount(); j++) {
                         Object pathElement = path.getSegment(j);
                         if (comparer is null ? Util
-                                .equals(element, pathElement) : comparer
-                                .equals(element, pathElement)) {
+                                .opEquals(element, pathElement) : comparer
+                                .opEquals(element, pathElement)) {
                             viewer.setSelection(selection);
                             break outer;
                         }

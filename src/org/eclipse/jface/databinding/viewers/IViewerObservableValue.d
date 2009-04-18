@@ -10,6 +10,7 @@
  ******************************************************************************/
 
 module org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.IViewerObservable;
 
 import java.lang.all;
 

@@ -74,17 +74,22 @@ public class WizardPageSupport {
     }
 
     private this(WizardPage wizardPage, DataBindingContext dbc) {
+uiChangeListener = new UiChangeListener();
+validationStatusProvidersListener = new ValidationStatusProvidersListener();
+validationStatusProviderTargetsListener = new ValidationStatusProviderTargetsListener();
         this.wizardPage = wizardPage;
         this.dbc = dbc;
         init();
     }
 
-    private IChangeListener uiChangeListener = new class() IChangeListener {
+    private IChangeListener uiChangeListener;
+    class UiChangeListener : IChangeListener {
         public void handleChange(ChangeEvent event) {
             handleUIChanged();
         }
     };
-    private IListChangeListener validationStatusProvidersListener = new class() IListChangeListener {
+    private IListChangeListener validationStatusProvidersListener;
+    class ValidationStatusProvidersListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             ListDiff diff = event.diff;
             ListDiffEntry[] differences = diff.getDifferences();
@@ -111,7 +116,8 @@ public class WizardPageSupport {
             }
         }
     };
-    private IListChangeListener validationStatusProviderTargetsListener = new class() IListChangeListener {
+    private IListChangeListener validationStatusProviderTargetsListener;
+    class ValidationStatusProviderTargetsListener : IListChangeListener {
         public void handleListChange(ListChangeEvent event) {
             ListDiff diff = event.diff;
             ListDiffEntry[] differences = diff.getDifferences();
@@ -266,7 +272,7 @@ public class WizardPageSupport {
                                 IStatus.ERROR,
                                 Policy.JFACE_DATABINDING,
                                 IStatus.OK,
-                                "Unhandled exception: " + throwable.getMessage(), throwable)); //$NON-NLS-1$
+                                Format("Unhandled exception: {}", throwable.msg), throwable)); //$NON-NLS-1$
     }
 
     /**

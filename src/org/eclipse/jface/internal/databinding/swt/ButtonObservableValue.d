@@ -32,7 +32,8 @@ public class ButtonObservableValue : AbstractSWTObservableValue {
 
     private bool selectionValue;
 
-    private Listener updateListener = new class() Listener {
+    private Listener updateListener;
+    class UpdateListener : Listener {
         public void handleEvent(Event event) {
             bool oldSelectionValue = selectionValue;
             selectionValue = button.getSelection();
@@ -61,6 +62,7 @@ public class ButtonObservableValue : AbstractSWTObservableValue {
     }
     
     private void init() {
+updateListener = new UpdateListener();
         button.addListener(SWT.Selection, updateListener);
         button.addListener(SWT.DefaultSelection, updateListener);       
     }

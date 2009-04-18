@@ -20,6 +20,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 
 /**
  * NON-API - An abstract superclass for vetoable values that gurantees that the 
@@ -29,6 +30,18 @@ import org.eclipse.swt.widgets.Widget;
  * @since 1.1
  */
 public abstract class AbstractSWTVetoableValue : AbstractVetoableValue , ISWTObservableValue {
+    public override Object getValue(){
+        return super.getValue();
+    }
+    public override void setValue( Object v ){
+        super.setValue(v);
+    }
+    public void addValueChangeListener(IValueChangeListener listener) {
+        super.addValueChangeListener(listener);
+    }
+    public void removeValueChangeListener(IValueChangeListener listener) {
+        super.removeValueChangeListener(listener);
+    }
 
     private final Widget widget;
 
@@ -50,6 +63,7 @@ public abstract class AbstractSWTVetoableValue : AbstractVetoableValue , ISWTObs
      * @since 1.2
      */
     protected this(Realm realm, Widget widget) {
+disposeListener = new _DisposeListener();
         super(realm);
         this.widget = widget;
         if (widget is null) {
@@ -58,7 +72,8 @@ public abstract class AbstractSWTVetoableValue : AbstractVetoableValue , ISWTObs
         widget.addDisposeListener(disposeListener);
     }
     
-    private DisposeListener disposeListener = new class() DisposeListener {
+    private DisposeListener disposeListener;
+    class _DisposeListener : DisposeListener {
         public void widgetDisposed(DisposeEvent e) {
             this.outer.dispose();
         }

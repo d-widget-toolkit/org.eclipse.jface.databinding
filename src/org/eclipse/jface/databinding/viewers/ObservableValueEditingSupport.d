@@ -39,7 +39,7 @@ public abstract class ObservableValueEditingSupport : EditingSupport {
      */
     private EditingState editingState;
 
-    private final ColumnViewerEditorActivationListenerHelper activationListener = new ColumnViewerEditorActivationListenerHelper();
+    private const ColumnViewerEditorActivationListenerHelper activationListener;
 
     private ColumnViewer viewer;
 
@@ -56,6 +56,7 @@ public abstract class ObservableValueEditingSupport : EditingSupport {
      */
     public this(ColumnViewer viewer,
             DataBindingContext dbc) {
+activationListener = new ColumnViewerEditorActivationListenerHelper();
         super(viewer);
 
         if (dbc is null) {
@@ -107,12 +108,12 @@ public abstract class ObservableValueEditingSupport : EditingSupport {
             ViewerCell cell) {
         IObservableValue target = doCreateCellEditorObservable(cellEditor);
         Assert
-                .isNotNull(target,
+                .isNotNull(cast(Object)target,
                         "doCreateCellEditorObservable(...) did not return an observable"); //$NON-NLS-1$
 
         IObservableValue model = doCreateElementObservable(cell.getElement(),
                 cell);
-        Assert.isNotNull(model,
+        Assert.isNotNull(cast(Object)model,
                 "doCreateElementObservable(...) did not return an observable"); //$NON-NLS-1$
 
         Binding binding = createBinding(target, model);

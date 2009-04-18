@@ -10,6 +10,7 @@
  *     Stefan Xenos, IBM - initial API and implementation
  *******************************************************************************/
 module org.eclipse.jface.internal.databinding.provisional.viewers.TreeNode;
+import org.eclipse.jface.internal.databinding.provisional.viewers.UnorderedTreeContentProvider;
 
 import java.lang.all;
 
@@ -52,7 +53,7 @@ import org.eclipse.swt.widgets.Control;
     private IObservableSet children;
     
     private bool hasPendingNode = false;
-    private bool isStale;
+    private bool isStale_;
     private bool listeningToChildren = false;
     private bool prefetchEnqueued = false;
     
@@ -78,7 +79,7 @@ import org.eclipse.swt.widgets.Control;
         if (this.parent is null) {
             this.parent = parent;
         } else {
-            if (parent.equals(this.parent)) {
+            if (parent.opEquals(this.parent)) {
                 return;
             }
             if (parents is null) {
@@ -142,10 +143,10 @@ import org.eclipse.swt.widgets.Control;
     
     private void updateStale() {
         bool willBeStale = children.isStale();
-        if (willBeStale !is isStale) {
-            isStale = willBeStale;
+        if (willBeStale !is isStale_) {
+            isStale_ = willBeStale;
             
-            contentProvider.changeStale(isStale? 1 : -1);
+            contentProvider.changeStale(isStale_? 1 : -1);
         }
     }
     
@@ -153,7 +154,7 @@ import org.eclipse.swt.widgets.Control;
      * @return TODO
      */
     public bool isStale() {
-        return isStale;
+        return isStale_;
     }
 
     /**
@@ -190,7 +191,7 @@ import org.eclipse.swt.widgets.Control;
             children.dispose();
             children = null;
             
-            if (listeningToChildren && isStale) {
+            if (listeningToChildren && isStale_) {
                 contentProvider.changeStale(-1);
             }
         }

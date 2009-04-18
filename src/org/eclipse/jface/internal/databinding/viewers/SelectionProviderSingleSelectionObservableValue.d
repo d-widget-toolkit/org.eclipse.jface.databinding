@@ -96,7 +96,7 @@ public class SelectionProviderSingleSelectionObservableValue :
                     .setSelection(value is null ? StructuredSelection.EMPTY
                             : new StructuredSelection(value));
             currentSelection = doGetValue();
-            if (!Util.equals(oldSelection, currentSelection)) {
+            if (!Util.opEquals(oldSelection, currentSelection)) {
                 fireValueChange(Diffs.createValueDiff(oldSelection,
                         currentSelection));
             }

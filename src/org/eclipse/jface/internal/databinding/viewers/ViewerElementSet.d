@@ -11,6 +11,7 @@
  ******************************************************************************/
 
 module org.eclipse.jface.internal.databinding.viewers.ViewerElementSet;
+import org.eclipse.jface.internal.databinding.viewers.ViewerElementWrapper;
 
 import java.lang.all;
 
@@ -38,6 +39,31 @@ import org.eclipse.jface.viewers.StructuredViewer;
  * @since 1.2
  */
 public class ViewerElementSet : Set {
+// DWT start: additional methods in Set
+    public bool add(String o) {
+        return add(stringcast(o));
+    }
+    public bool remove(String o) {
+        return remove(stringcast(o));
+    }
+    public bool contains(String o) {
+        return contains(stringcast(o));
+    }
+    public int opApply (int delegate(ref Object value) dg){
+        auto it = iterator();
+        while(it.hasNext()){
+            auto v = it.next();
+            int res = dg( v );
+            if( res ) return res;
+        }
+        return 0;
+    }
+    public String toString(){
+        return super.toString();
+    }
+
+// DWT end: additional methods in Set
+
     private final Set wrappedSet;
     private final IElementComparer comparer;
 
@@ -48,7 +74,7 @@ public class ViewerElementSet : Set {
      *            the {@link IElementComparer} used for comparing elements.
      */
     public this(IElementComparer comparer) {
-        Assert.isNotNull(comparer);
+        Assert.isNotNull(cast(Object)comparer);
         this.wrappedSet = new HashSet();
         this.comparer = comparer;
     }
@@ -136,7 +162,7 @@ public class ViewerElementSet : Set {
         outer: for (Iterator iterator = iterator(); iterator.hasNext();) {
             Object element = iterator.next();
             for (int i = 0; i < retainAll.length; i++) {
-                if (comparer.equals(element, retainAll[i])) {
+                if (comparer.opEquals(element, retainAll[i])) {
                     continue outer;
                 }
             }
@@ -160,15 +186,16 @@ public class ViewerElementSet : Set {
                 .toArray(new ViewerElementWrapper[size]);
         Object[] result = a;
         if (a.length < size) {
-            result = cast(Object[]) Array.newInstance(a.getClass()
-                    .getComponentType(), size);
+            //result = cast(Object[]) Array.newInstance(a.getClass()
+            //        .getComponentType(), size);
+            result = new Object[size];
         }
         for (int i = 0; i < size; i++)
             result[i] = wrappedArray[i].unwrap();
         return result;
     }
 
-    public bool equals(Object obj) {
+    public override equals_t opEquals(Object obj) {
         if (obj is this)
             return true;
         if (!(null !is cast(Set)obj))
@@ -177,11 +204,11 @@ public class ViewerElementSet : Set {
         return size() is that.size() && containsAll(that);
     }
 
-    public int hashCode() {
+    public override hash_t toHash() {
         int hash = 0;
         for (Iterator iterator = iterator(); iterator.hasNext();) {
             Object element = iterator.next();
-            hash += element is null ? 0 : element.hashCode();
+            hash += element is null ? 0 : element.toHash();
         }
         return hash;
     }

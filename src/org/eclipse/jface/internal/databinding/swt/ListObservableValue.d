@@ -41,7 +41,7 @@ public class ListObservableValue : AbstractSWTObservableValue {
     public this(List list) {
         super(list);
         this.list = list;
-        this.currentValue = cast(String) doGetValue();
+        this.currentValue = stringcast(doGetValue());
 
         if ((list.getStyle() & SWT.MULTI) > 0)
             throw new IllegalArgumentException(
@@ -51,10 +51,10 @@ public class ListObservableValue : AbstractSWTObservableValue {
 
             public void handleEvent(Event event) {
                 if (!updating) {
-                    Object oldValue = currentValue;
-                    currentValue = cast(String) doGetValue();
+                    Object oldValue = stringcast(currentValue);
+                    currentValue = stringcast(doGetValue());
                     fireValueChange(Diffs.createValueDiff(oldValue,
-                            currentValue));
+                            stringcast(currentValue)));
                 }
             }
 
@@ -70,31 +70,32 @@ public class ListObservableValue : AbstractSWTObservableValue {
             updating = true;
             String items[] = list.getItems();
             int index = -1;
+            String valueStr = stringcast(value);
             if (items !is null && value !is null) {
                 for (int i = 0; i < items.length; i++) {
-                    if (value.equals(items[i])) {
+                    if (valueStr.equals(items[i])) {
                         index = i;
                         break;
                     }
                 }
                 list.select(index); // -1 will not "unselect"
             }
-            currentValue = cast(String) value;
+            currentValue = stringcast(value);
         } finally {
             updating = false;
         }
-        fireValueChange(Diffs.createValueDiff(oldValue, value));
+        fireValueChange(Diffs.createValueDiff(stringcast(oldValue), value));
     }
 
     public Object doGetValue() {
         int index = list.getSelectionIndex();
         if (index >= 0)
-            return list.getItem(index);
+            return stringcast(list.getItem(index));
         return null;
     }
 
     public Object getValueType() {
-        return String.classinfo;
+        return Class.fromType!(String);
     }
 
     /*
